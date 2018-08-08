@@ -34,7 +34,7 @@ int main(int, const char *[]) {
 		IloInt W, V, Gamma;
 		IloInt i;
 		IloNum epsilon = 0.001;
-		W = 10;
+		W = 10; //aaa
 		V = 10;
 
 		IloIntVar w(env, 0, V+W, "w");
