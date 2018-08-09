@@ -2,6 +2,7 @@
 
 int main(int, const char *[]) {
 	Problema Prob("problema.txt");
+
 	Prob.Rodar();
 	Prob.ImprimirPadrao();
 

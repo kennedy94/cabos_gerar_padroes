@@ -15,7 +15,6 @@ private:
 	IloEnv env;
 	IloModel model;
 	IloInt W, V, Gamma;
-	IloNum epsilon;
 	IloIntVar w;
 	IloIntVarArray A;
 	IloNum Maior_Barra;
