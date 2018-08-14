@@ -41,8 +41,9 @@ Problema::Problema(const char* filename){
 	/*Para cada tipo de viga ler os n_tamanhos, tamanhos, demandas, cura e n_barras 
 	necessárias*/
 	Maior_Qc = 0;
-	Menor_tamanho = INT_MAX;
+	Menor_tamanho = IloNumArray(env, C);
 	for (int i = 0; i < C; i++) {
+		Menor_tamanho[i] = 100;
 
 		instancia >> Tipos_de_Viga[i].tempo_cura 
 			>> Tipos_de_Viga[i].n_comprimentos
@@ -58,8 +59,8 @@ Problema::Problema(const char* filename){
 		//Ler comprimentos
 		for (int k = 0; k < Tipos_de_Viga[i].n_comprimentos; k++) {
 			instancia >> Tipos_de_Viga[i].comprimentos[k];
-			if (Tipos_de_Viga[i].comprimentos[k] < Menor_tamanho)
-				Menor_tamanho = Tipos_de_Viga[i].comprimentos[k];
+			if (Tipos_de_Viga[i].comprimentos[k] < Menor_tamanho[i])
+				Menor_tamanho[i] = Tipos_de_Viga[i].comprimentos[k];
 		}
 
 		//Demandas dos comprimentos
@@ -192,7 +193,8 @@ void Problema::Iniciar_Modelo_Packing() {
 	/*Alocar variáveis*/
 	model = IloModel(env);
 	c = IloIntVar(env, 0, C - 1, "c");
-	A = IloIntVarArray(env, Maior_Qc, 0, Maior_Forma/Menor_tamanho);
+	A = IloIntVarArray(env, Maior_Qc, 0, 100);
+
 
 	for (int i = 0; i < C; i++){
 		for (int k = Tipos_de_Viga[i].n_comprimentos; k < Maior_Qc; k++){
@@ -204,7 +206,7 @@ void Problema::Iniciar_Modelo_Packing() {
 				A[k];
 		}
 
-		model.add(IloIfThen(env, c == i, Menor_Forma - Menor_tamanho + EPSILON <= soma));
+		model.add(IloIfThen(env, c == i, Menor_Forma - Menor_tamanho[i] + FLT_EPSILON <= soma));
 		model.add(IloIfThen(env, c == i, soma <= Maior_Forma));
 	}
 }

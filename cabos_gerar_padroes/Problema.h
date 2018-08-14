@@ -32,7 +32,7 @@ private:
 	IloIntArray d;
 	IloNum Maior_Forma, Menor_Forma;
 	IloInt Maior_Qc;
-	IloNum Menor_tamanho;
+	IloNumArray Menor_tamanho;
 	//Variaveis de Decisão Dependentes do Gerados de Packing
 	IloIntVar c;
 
