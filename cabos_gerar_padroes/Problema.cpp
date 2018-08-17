@@ -119,6 +119,9 @@ void Problema::Iniciar_Modelo_Cortes() {
 		}
 	}
 
+	for (int i = Gamma; i < Gamma + V; i++) 
+		model.add(IloIfThen(env, w >= W, A[i] == 0));
+
 }
 
 void Problema::Resolver_Cortes() {
