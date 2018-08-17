@@ -16,10 +16,10 @@ int main(int argc, char *argv[]) {
 
 
 	Problema Prob(inst);
-	Prob.Rodar_Packing();
-	Prob.ImprimirPadrao_Packing();
-	/*Prob.Rodar_Cortes();
-	Prob.ImprimirPadrao_Corte();*/
+	/*Prob.Rodar_Packing();
+	Prob.ImprimirPadrao_Packing();*/
+	Prob.Rodar_Cortes();
+	Prob.ImprimirPadrao_Corte();
 
 	system("pause");
 	return 0;

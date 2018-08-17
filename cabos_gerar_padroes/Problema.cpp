@@ -111,6 +111,14 @@ void Problema::Iniciar_Modelo_Cortes() {
 		soma2 += b[W + i] * A[Gamma + i];
 
 	model.add(soma1 + soma2  <= b[w]);
+
+	for (int i = Gamma; i < Gamma + V; i++){
+		for (int j = Gamma; j < Gamma + V; j++) {
+			if(i != j)
+				model.add(IloIfThen(env, A[i] > 0, A[j] == 0));
+		}
+	}
+
 }
 
 void Problema::Resolver_Cortes() {
