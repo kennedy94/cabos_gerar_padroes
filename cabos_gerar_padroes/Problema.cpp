@@ -303,8 +303,3 @@ void Problema::ImprimirPadrao_Packing() {
 }
 
 
-
-Problema::~Problema()
-{
-	env.end();
-}

@@ -58,6 +58,5 @@ public:
 	void Rodar_Packing();
 	void Resolver_Packing();
 	void ImprimirPadrao_Packing();
-	~Problema();
 };
 
