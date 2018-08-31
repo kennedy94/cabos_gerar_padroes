@@ -90,6 +90,7 @@ void Problema::Iniciar_Modelo_Cortes() {
 	/*Alocar variáveis*/
 	model = IloModel(env);
 	w = IloIntVar(env, 0, W + V - 1, "w");
+	cap = IloNumVar(env, 0, Maior_Barra, "cap");
 	A = IloIntVarArray(env, Gamma + V);
 	
 	/*Preste atenção que aqui voce fez um range diferente para cada tipo de barra
@@ -107,13 +108,24 @@ void Problema::Iniciar_Modelo_Cortes() {
 
 	IloExpr soma1(env), soma2(env), aaa(env);
 
-	for (int i = 0; i < Gamma; i++)
+	for (int i = 0; i < Gamma; i++) {
 		soma1 += L[i] * A[i];
+		cout << L[i] << endl;
+	}
 
-	for (int i = 0; i < V; i++)
+	for (int i = 0; i < V; i++) {
 		soma2 += b[W + i] * A[Gamma + i];
+		cout << b[W + i] << endl;
+	}
 
-	model.add(soma1 + soma2  <= b[w]);
+	model.add(soma1 + soma2 == cap);
+
+	model.add(cap  <= b[w]);
+
+	model.add(cap >= FLT_EPSILON);
+
+	soma1.end();
+	soma2.end();
 
 	for (int i = Gamma; i < Gamma + V; i++){
 		for (int j = Gamma; j < Gamma + V; j++) {
@@ -134,13 +146,15 @@ void Problema::Resolver_Cortes() {
 		IloCP cp(model);
 		cp.propagate();
 		cout << cp.domain(A) << endl;
-
+		cp.exportModel("modelo.cpo");
 		cp.startNewSearch();
 		while (cp.next()) {
-			list<int> auxiliar;
+			list<double> auxiliar;
 			auxiliar.push_back(cp.getValue(w));
 			for (int i = 0; i < Gamma + V; i++)
 				auxiliar.push_back(cp.getValue(A[i]));
+			auxiliar.push_back(cp.getValue(cap));
+
 			Padroes.push_back(auxiliar);
 		}
 
@@ -163,7 +177,7 @@ void Problema::Rodar_Cortes() {
 
 void Problema::ImprimirPadrao_Corte() {
 
-	list<list<int>> Auxiliar_list = Padroes;
+	list<list<double>> Auxiliar_list = Padroes;
 	int tamanho = Padroes.size();
 	Padroes.clear(); //Limpar os padroes para reordenar-los
 
@@ -172,7 +186,7 @@ void Problema::ImprimirPadrao_Corte() {
 
 	for (int i = 0; i < tamanho; i++) {
 		int menor = INT_MAX;
-		list<int> auxiliar_int;
+		list<double> auxiliar_int;
 
 		for (auto interno : Auxiliar_list) {
 			if (*interno.begin() <= menor) {
@@ -242,7 +256,7 @@ void Problema::Resolver_Packing() {
 
 		cp.startNewSearch();
 		while (cp.next()) {
-			list<int> auxiliar;
+			list<double> auxiliar;
 			auxiliar.push_back(cp.getValue(c));
 
 			for (int i = 0; i < Tipos_de_Viga[cp.getValue(c)].n_comprimentos; i++)
@@ -261,7 +275,7 @@ void Problema::Resolver_Packing() {
 
 void Problema::ImprimirPadrao_Packing() {
 
-	list<list<int>> Auxiliar_list = Padroes;
+	list<list<double>> Auxiliar_list = Padroes;
 	int tamanho = Padroes.size();
 	Padroes.clear(); //Limpar os padroes para reordenar-los
 
@@ -270,7 +284,7 @@ void Problema::ImprimirPadrao_Packing() {
 
 	for (int i = 0; i < tamanho; i++) {
 		int menor = INT_MAX;
-		list<int> auxiliar_int;
+		list<double> auxiliar_int;
 
 		for (auto interno : Auxiliar_list) {
 			if (*interno.begin() <= menor) {

@@ -1,0 +1,41 @@
+// --------------------------------------------------------------------------
+// IBM ILOG CP Optimizer model export file
+// Effective workers: 4
+// --------------------------------------------------------------------------
+
+// ------ Integer variables: ------------------------------------------------
+
+IntVar_0 = intVar(0..4);
+IntVar_1 = intVar(0..2);
+IntVar_2 = intVar(0..4);
+IntVar_3 = intVar(0..3);
+IntVar_4 = intVar(0..2);
+IntVar_5 = intVar(0..2);
+w = intVar(0..6);
+
+// ------ Floating-point variables: -----------------------------------------
+
+cap = floatVar(0, 25);
+
+// ------ Constraints: ------------------------------------------------------
+
+5.95*IntVar_0 + 11.95*IntVar_1 + 6*IntVar_2 + 8*IntVar_3 + 10*IntVar_4 + 12*IntVar_5 == cap;
+cap <= element(floatArray[15, 20, 25, 6, 8, 10, 12], w);
+cap >= 1.1920928955078125e-07;
+(IntVar_2 >= 1) => (IntVar_3 == 0);
+(IntVar_2 >= 1) => (IntVar_4 == 0);
+(IntVar_2 >= 1) => (IntVar_5 == 0);
+(IntVar_3 >= 1) => (IntVar_2 == 0);
+(IntVar_3 >= 1) => (IntVar_4 == 0);
+(IntVar_3 >= 1) => (IntVar_5 == 0);
+(IntVar_4 >= 1) => (IntVar_2 == 0);
+(IntVar_4 >= 1) => (IntVar_3 == 0);
+(IntVar_4 >= 1) => (IntVar_5 == 0);
+(IntVar_5 >= 1) => (IntVar_2 == 0);
+(IntVar_5 >= 1) => (IntVar_3 == 0);
+(IntVar_5 >= 1) => (IntVar_4 == 0);
+(w >= 3) => (IntVar_2 == 0);
+(w >= 3) => (IntVar_3 == 0);
+(w >= 3) => (IntVar_4 == 0);
+(w >= 3) => (IntVar_5 == 0);
+

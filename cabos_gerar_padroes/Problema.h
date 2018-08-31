@@ -24,6 +24,7 @@ private:
 	IloNumArray b;
 	vector<Tipo_Viga> Tipos_de_Viga;
 
+
 	IloInt M, C, T;
 	IloInt e, k;
 	vector<double> FORMAS;
@@ -35,6 +36,7 @@ private:
 	IloNumArray Menor_tamanho;
 	//Variaveis de Decisão Dependentes do Gerados de Packing
 	IloIntVar c;
+	IloNumVar cap;
 
 	//Variaveis de Decisão Dependentes do Gerador de Cortes
 	IloIntVar w;
@@ -46,7 +48,7 @@ private:
 	void Iniciar_Modelo_Cortes();
 	void Resolver_Cortes();
 	
-	list<list<int>> Padroes;
+	list<list<double>> Padroes;
 
 public:
 
