@@ -24,7 +24,9 @@ int main(int argc, char *argv[]) {
 	{
 		cout << e.what() << endl;
 	}
-	try
+
+
+	/*try
 	{
 		Problema Prob(inst);
 		Prob.Rodar_Cortes();
@@ -33,7 +35,7 @@ int main(int argc, char *argv[]) {
 	catch (const std::exception&e)
 	{
 		cout << e.what() << endl;
-	}
+	}*/
 	
 
 	system("pause");

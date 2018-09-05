@@ -177,27 +177,27 @@ void Problema::Rodar_Cortes() {
 
 void Problema::ImprimirPadrao_Corte() {
 
-	list<list<double>> Auxiliar_list = Padroes;
-	int tamanho = Padroes.size();
-	Padroes.clear(); //Limpar os padroes para reordenar-los
+	//list<list<double>> Auxiliar_list = Padroes;
+	//int tamanho = Padroes.size();
+	//Padroes.clear(); //Limpar os padroes para reordenar-los
 
-	/*Ordenando os padroes para imprimir em ordem crescente do indice de barra*/
+	///*Ordenando os padroes para imprimir em ordem crescente do indice de barra*/
 
 
-	for (int i = 0; i < tamanho; i++) {
-		int menor = INT_MAX;
-		list<double> auxiliar_int;
+	//for (int i = 0; i < tamanho; i++) {
+	//	int menor = INT_MAX;
+	//	list<double> auxiliar_int;
 
-		for (auto interno : Auxiliar_list) {
-			if (*interno.begin() <= menor) {
-				auxiliar_int = interno;
-				menor = *interno.begin();
-			}
-		}
-		Padroes.push_back(auxiliar_int);
-		Auxiliar_list.remove(auxiliar_int);
+	//	for (auto interno : Auxiliar_list) {
+	//		if (*interno.begin() <= menor) {
+	//			auxiliar_int = interno;
+	//			menor = *interno.begin();
+	//		}
+	//	}
+	//	Padroes.push_back(auxiliar_int);
+	//	Auxiliar_list.remove(auxiliar_int);
 
-	}
+	//}
 
 	/*Imprimir padroes no arquivo*/
 	string arquivo_saida = ".cutpat";
@@ -234,7 +234,8 @@ void Problema::Iniciar_Modelo_Packing() {
 				A[k];
 		}
 
-		model.add(IloIfThen(env, c == i, Menor_Forma - Menor_tamanho[i] + FLT_EPSILON <= soma));
+		//model.add(IloIfThen(env, c == i, Menor_Forma - Menor_tamanho[i] + FLT_EPSILON <= soma));
+		model.add(IloIfThen(env, c == i, FLT_EPSILON <= soma));
 		model.add(IloIfThen(env, c == i, soma <= Maior_Forma));
 	}
 }
@@ -252,6 +253,7 @@ void Problema::Resolver_Packing() {
 
 		IloCP cp(model);
 		cp.propagate();
+		cp.setParameter(IloCP::LogVerbosity, IloCP::Quiet);
 		cout << cp.domain(A) << endl;
 
 		cp.startNewSearch();
@@ -275,14 +277,14 @@ void Problema::Resolver_Packing() {
 
 void Problema::ImprimirPadrao_Packing() {
 
-	list<list<double>> Auxiliar_list = Padroes;
-	int tamanho = Padroes.size();
-	Padroes.clear(); //Limpar os padroes para reordenar-los
+	//list<list<double>> Auxiliar_list = Padroes;
+	//int tamanho = Padroes.size();
+	//Padroes.clear(); //Limpar os padroes para reordenar-los
 
 					 /*Ordenando os padroes para imprimir em ordem crescente do indice de barra*/
 
 
-	for (int i = 0; i < tamanho; i++) {
+	/*for (int i = 0; i < tamanho; i++) {
 		int menor = INT_MAX;
 		list<double> auxiliar_int;
 
@@ -290,12 +292,13 @@ void Problema::ImprimirPadrao_Packing() {
 			if (*interno.begin() <= menor) {
 				auxiliar_int = interno;
 				menor = *interno.begin();
+				break;
 			}
 		}
 		Padroes.push_back(auxiliar_int);
 		Auxiliar_list.remove(auxiliar_int);
 
-	}
+	}*/
 
 	/*Imprimir padroes no arquivo*/
 	string arquivo_saida = ".pat";
