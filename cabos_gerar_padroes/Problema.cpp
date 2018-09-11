@@ -222,7 +222,7 @@ void Problema::Iniciar_Modelo_Packing() {
 	model = IloModel(env);
 	c = IloIntVar(env, 0, C - 1, "c");
 	A = IloIntVarArray(env, Maior_Qc, 0, 100);
-
+	gamma = IloIntVar(env, 0, Gamma - 1, "gamma");
 
 	for (int i = 0; i < C; i++){
 		for (int k = Tipos_de_Viga[i].n_comprimentos; k < Maior_Qc; k++){
@@ -235,8 +235,12 @@ void Problema::Iniciar_Modelo_Packing() {
 		}
 
 		//model.add(IloIfThen(env, c == i, Menor_Forma - Menor_tamanho[i] + FLT_EPSILON <= soma));
-		model.add(IloIfThen(env, c == i, FLT_EPSILON <= soma));
-		model.add(IloIfThen(env, c == i, soma <= Maior_Forma));
+		
+		for (int m = 0; m < Gamma; m++)
+		{
+			model.add(IloIfThen(env, c == i && m == gamma, L[m] - Menor_tamanho[i] + FLT_EPSILON <= soma));
+			model.add(IloIfThen(env, c == i && m == gamma, soma <= L[m]));
+		}
 	}
 }
 
@@ -270,7 +274,6 @@ void Problema::Resolver_Packing() {
 	}
 	catch (IloException& ex) {
 		env.out() << "Error: " << ex << endl;
-
 	}
 	env.end();
 }

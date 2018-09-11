@@ -35,6 +35,7 @@ private:
 	IloInt Maior_Qc;
 	IloNumArray Menor_tamanho;
 	//Variaveis de Decisão Dependentes do Gerados de Packing
+	IloIntVar gamma; //Variável auxiliar para gerar apenas maximais
 	IloIntVar c;
 	IloNumVar cap;
 
