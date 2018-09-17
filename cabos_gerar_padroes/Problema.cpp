@@ -82,6 +82,16 @@ Problema::Problema(const char* filename){
 		if (b[i] > Maior_Barra)
 			Maior_Barra = b[i];
 	}
+
+	estoque = IloIntArray(env, W + V);
+	for (int i = 0; i < W + V; i++) {
+		instancia >> estoque[i];
+		cout << estoque[i] << " ";
+	}
+
+	instancia >> epsilon;
+	cout << endl << epsilon << endl;
+
 	cout << endl;
 	instancia.close();
 }
@@ -145,6 +155,7 @@ void Problema::Resolver_Cortes() {
 
 		IloCP cp(model);
 		cp.propagate();
+		cp.setParameter(IloCP::LogVerbosity, IloCP::Quiet);
 		cout << cp.domain(A) << endl;
 		cp.exportModel("modelo.cpo");
 		cp.startNewSearch();
@@ -326,3 +337,92 @@ void Problema::ImprimirPadrao_Packing() {
 }
 
 
+void Problema::Splicing_Model_Initiate() {
+	model = IloModel(env);
+	A = IloIntVarArray(env, V, 0, 2);
+
+
+	for (int i = 0; i < V; i++) {
+		stringstream ss;
+		ss << "A[" << i << "]";
+		string s_aux = ss.str();
+		A[i].setName(s_aux.c_str());
+	}
+
+
+	gamma = IloIntVar(env, 0, Gamma - 1, "gamma");
+	folga = IloNumVar(env, 0, 10000, "folga");
+
+	IloExpr soma(env), soma2(env);
+
+	for (int i = 0; i < V; i++)
+		soma += A[i] * b[W + i];
+
+	for (int m = 0; m < Gamma; m++) {
+		model.add(IloIfThen(env, m == gamma, soma >= L[m] + epsilon));
+		model.add(IloIfThen(env, m == gamma, folga == soma - L[m] - epsilon));
+	}
+	soma.end();
+
+	for (int i = 0; i < V; i++)
+		soma2 += A[i];
+	model.add(soma2 == 2);
+
+	soma2.end();
+}
+
+
+void Problema::Splicing_Solve() {
+	//Passar por cada solução e a guarda em uma lista de padrões que será impressa após
+	try {
+
+		IloCP cp(model);
+		cp.exportModel("modelo.cpo");
+		//cp.propagate();
+		//cp.setParameter(IloCP::LogVerbosity, IloCP::Quiet);
+		cout << cp.domain(A) << endl;
+
+		cp.startNewSearch();
+		while (cp.next()) {
+			list<double> auxiliar;
+			auxiliar.push_back(cp.getValue(gamma));
+
+			auxiliar.push_back(cp.getValue(folga));
+
+			for (int i = 0; i < V; i++)
+				auxiliar.push_back(cp.getValue(A[i]));
+
+			Padroes.push_back(auxiliar);
+		}
+
+	}
+	catch (IloException& ex) {
+		env.out() << "Error: " << ex.getMessage() << endl;
+	}
+	env.end();
+}
+
+
+
+void Problema::Rodar_Spl()
+{
+	Splicing_Model_Initiate();
+	Splicing_Solve();
+}
+
+void Problema::ImprimirPadrao_Splicing() {
+
+	string arquivo_saida = ".spl";
+	stringstream ss;
+	ss << nome_instancia << arquivo_saida;
+	arquivo_saida = ss.str();
+
+	ofstream saida(arquivo_saida);
+
+	for (auto elemento : Padroes) {
+		for (auto gene : elemento)
+			saida << gene << " ";
+		saida << endl;
+	}
+	saida.close();
+}

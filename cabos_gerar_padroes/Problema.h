@@ -31,6 +31,7 @@ private:
 	vector<double> L;
 	IloNumArray l;
 	IloIntArray d;
+	IloIntArray estoque;
 	IloNum Maior_Forma, Menor_Forma;
 	IloInt Maior_Qc;
 	IloNumArray Menor_tamanho;
@@ -43,13 +44,26 @@ private:
 	IloIntVar w;
 	IloIntVarArray A;
 	IloNum Maior_Barra;
-	
-	const char* nome_instancia;
-	
-	void Iniciar_Modelo_Cortes();
-	void Resolver_Cortes();
+
+	//Variaveis de decisão dependetes do gerador de traspasse
+	//Não há adicional apenas redefinição
+	IloNumVar folga;
+	IloNum epsilon;
 	
 	list<list<double>> Padroes;
+
+	const char* nome_instancia;
+	
+
+
+	void Resolver_Cortes();
+	void Resolver_Packing();
+	
+	void Iniciar_Modelo_Cortes();
+	void Iniciar_Modelo_Packing();
+
+	void Splicing_Model_Initiate();
+	void Splicing_Solve();
 
 public:
 
@@ -57,9 +71,11 @@ public:
 	
 	void Rodar_Cortes();
 	void ImprimirPadrao_Corte();
-	void Iniciar_Modelo_Packing();
+
 	void Rodar_Packing();
-	void Resolver_Packing();
 	void ImprimirPadrao_Packing();
+	
+	void Rodar_Spl();
+	void ImprimirPadrao_Splicing();
 };
 

@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	try
+	/*try
 	{
 		Problema Prob(inst);
 		Prob.Rodar_Packing();
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	}
 
 
-	/*try
+	try
 	{
 		Problema Prob(inst);
 		Prob.Rodar_Cortes();
@@ -37,6 +37,16 @@ int main(int argc, char *argv[]) {
 		cout << e.what() << endl;
 	}*/
 	
+	try
+	{
+		Problema Prob(inst);
+		Prob.Rodar_Spl();
+		Prob.ImprimirPadrao_Splicing();
+	}
+	catch (const std::exception&e)
+	{
+		cout << e.what() << endl;
+	}
 
 	system("pause");
 	return 0;
