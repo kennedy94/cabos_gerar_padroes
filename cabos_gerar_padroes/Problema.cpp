@@ -162,9 +162,10 @@ void Problema::Resolver_Cortes() {
 		while (cp.next()) {
 			list<double> auxiliar;
 			auxiliar.push_back(cp.getValue(w));
+			auxiliar.push_back(cp.getValue(cap));
+
 			for (int i = 0; i < Gamma + V; i++)
 				auxiliar.push_back(cp.getValue(A[i]));
-			auxiliar.push_back(cp.getValue(cap));
 
 			Padroes.push_back(auxiliar);
 		}
@@ -234,6 +235,7 @@ void Problema::Iniciar_Modelo_Packing() {
 	c = IloIntVar(env, 0, C - 1, "c");
 	A = IloIntVarArray(env, Maior_Qc, 0, 100);
 	gamma = IloIntVar(env, 0, Gamma - 1, "gamma");
+	cap = IloNumVar(env, 0, Maior_Forma, "cap");
 
 	for (int i = 0; i < C; i++){
 		for (int k = Tipos_de_Viga[i].n_comprimentos; k < Maior_Qc; k++){
@@ -246,11 +248,11 @@ void Problema::Iniciar_Modelo_Packing() {
 		}
 
 		//model.add(IloIfThen(env, c == i, Menor_Forma - Menor_tamanho[i] + FLT_EPSILON <= soma));
-		
 		for (int m = 0; m < Gamma; m++)
 		{
 			model.add(IloIfThen(env, c == i && m == gamma, L[m] - Menor_tamanho[i] + FLT_EPSILON <= soma));
 			model.add(IloIfThen(env, c == i && m == gamma, soma <= L[m]));
+			model.add(IloIfThen(env, c == i && m == gamma, cap == soma));
 		}
 	}
 }
@@ -276,6 +278,8 @@ void Problema::Resolver_Packing() {
 			list<double> auxiliar;
 			auxiliar.push_back(cp.getValue(c));
 
+			auxiliar.push_back(cp.getValue(cap));
+
 			for (int i = 0; i < Tipos_de_Viga[cp.getValue(c)].n_comprimentos; i++)
 				auxiliar.push_back(cp.getValue(A[i]));
 
@@ -291,29 +295,6 @@ void Problema::Resolver_Packing() {
 
 void Problema::ImprimirPadrao_Packing() {
 
-	//list<list<double>> Auxiliar_list = Padroes;
-	//int tamanho = Padroes.size();
-	//Padroes.clear(); //Limpar os padroes para reordenar-los
-
-					 /*Ordenando os padroes para imprimir em ordem crescente do indice de barra*/
-
-
-	/*for (int i = 0; i < tamanho; i++) {
-		int menor = INT_MAX;
-		list<double> auxiliar_int;
-
-		for (auto interno : Auxiliar_list) {
-			if (*interno.begin() <= menor) {
-				auxiliar_int = interno;
-				menor = *interno.begin();
-				break;
-			}
-		}
-		Padroes.push_back(auxiliar_int);
-		Auxiliar_list.remove(auxiliar_int);
-
-	}*/
-
 	/*Imprimir padroes no arquivo*/
 	string arquivo_saida = ".pat";
 	stringstream ss;
@@ -322,7 +303,7 @@ void Problema::ImprimirPadrao_Packing() {
 
 	ofstream saida(arquivo_saida);
 
-	saida << Padroes.size() + 1 << endl << "0 ";
+	saida << Padroes.size() + 1 << endl << "0 0 ";
 	for (int i = 0; i < Tipos_de_Viga[0].n_comprimentos; i++)
 		saida << "0 ";
 	saida << endl;
@@ -379,7 +360,7 @@ void Problema::Splicing_Solve() {
 		IloCP cp(model);
 		cp.exportModel("modelo.cpo");
 		//cp.propagate();
-		//cp.setParameter(IloCP::LogVerbosity, IloCP::Quiet);
+		cp.setParameter(IloCP::LogVerbosity, IloCP::Quiet);
 		cout << cp.domain(A) << endl;
 
 		cp.startNewSearch();
