@@ -316,7 +316,7 @@ void Problema::Splicing_Model_Initiate() {
 
 	for (int m = 0; m < Gamma; m++) {
 		model.add(IloIfThen(env, m == gamma, soma >= L[m] + epsilon));
-		model.add(IloIfThen(env, m == gamma, folga == soma - L[m] + epsilon));
+		model.add(IloIfThen(env, m == gamma, folga == soma - L[m] - epsilon));
 	}
 	soma.end();
 
