@@ -157,7 +157,7 @@ void Problema::Resolver_Cortes() {
 		cp.propagate();
 		cp.setParameter(IloCP::LogVerbosity, IloCP::Quiet);
 		cout << cp.domain(A) << endl;
-		cp.exportModel("modelo.cpo");
+		//cp.exportModel("modelo.cpo");
 		cp.startNewSearch();
 		while (cp.next()) {
 			list<double> auxiliar;
@@ -188,29 +188,6 @@ void Problema::Rodar_Cortes() {
 }
 
 void Problema::ImprimirPadrao_Corte() {
-
-	//list<list<double>> Auxiliar_list = Padroes;
-	//int tamanho = Padroes.size();
-	//Padroes.clear(); //Limpar os padroes para reordenar-los
-
-	///*Ordenando os padroes para imprimir em ordem crescente do indice de barra*/
-
-
-	//for (int i = 0; i < tamanho; i++) {
-	//	int menor = INT_MAX;
-	//	list<double> auxiliar_int;
-
-	//	for (auto interno : Auxiliar_list) {
-	//		if (*interno.begin() <= menor) {
-	//			auxiliar_int = interno;
-	//			menor = *interno.begin();
-	//		}
-	//	}
-	//	Padroes.push_back(auxiliar_int);
-	//	Auxiliar_list.remove(auxiliar_int);
-
-	//}
-
 	/*Imprimir padroes no arquivo*/
 	string arquivo_saida = ".cutpat";
 	stringstream ss;
@@ -227,7 +204,6 @@ void Problema::ImprimirPadrao_Corte() {
 	saida.close();
 
 }
-
 
 void Problema::Iniciar_Modelo_Packing() {
 	/*Alocar variáveis*/
@@ -317,7 +293,6 @@ void Problema::ImprimirPadrao_Packing() {
 
 }
 
-
 void Problema::Splicing_Model_Initiate() {
 	model = IloModel(env);
 	A = IloIntVarArray(env, V, 0, 2);
@@ -352,13 +327,12 @@ void Problema::Splicing_Model_Initiate() {
 	soma2.end();
 }
 
-
 void Problema::Splicing_Solve() {
 	//Passar por cada solução e a guarda em uma lista de padrões que será impressa após
 	try {
 
 		IloCP cp(model);
-		cp.exportModel("modelo.cpo");
+		//cp.exportModel("modelo.cpo");
 		//cp.propagate();
 		cp.setParameter(IloCP::LogVerbosity, IloCP::Quiet);
 		cout << cp.domain(A) << endl;
@@ -383,8 +357,6 @@ void Problema::Splicing_Solve() {
 	env.end();
 }
 
-
-
 void Problema::Rodar_Spl()
 {
 	Splicing_Model_Initiate();
@@ -399,7 +371,7 @@ void Problema::ImprimirPadrao_Splicing() {
 	arquivo_saida = ss.str();
 
 	ofstream saida(arquivo_saida);
-
+	saida << Padroes.size() << endl;
 	for (auto elemento : Padroes) {
 		for (auto gene : elemento)
 			saida << gene << " ";
