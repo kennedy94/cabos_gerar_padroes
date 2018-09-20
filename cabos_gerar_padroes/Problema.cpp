@@ -333,10 +333,10 @@ void Problema::Splicing_Solve() {
 
 		IloCP cp(model);
 		//cp.exportModel("modelo.cpo");
-		//cp.propagate();
+		cp.propagate();
 		cp.setParameter(IloCP::LogVerbosity, IloCP::Quiet);
 		cout << cp.domain(A) << endl;
-
+		
 		cp.startNewSearch();
 		while (cp.next()) {
 			list<double> auxiliar;
