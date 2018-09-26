@@ -48,6 +48,6 @@ int main(int argc, char *argv[]) {
 		cout << e.what() << endl;
 	}
 
-	system("pause");
+	//system("pause");
 	return 0;
 }
