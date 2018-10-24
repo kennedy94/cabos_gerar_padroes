@@ -116,12 +116,17 @@ void Problema::Iniciar_Modelo_Cortes() {
 		
 	}
 
-	IloExpr soma1(env), soma2(env), aaa(env);
+	IloExpr soma1(env), soma2(env), soma3(env);
 
 	for (int i = 0; i < Gamma; i++) {
 		soma1 += L[i] * A[i];
 		cout << L[i] << endl;
 	}
+
+
+	for (int i = 0; i < Gamma; i++)
+		soma3+= A[i];
+	model.add(soma3 > 0);
 
 	for (int i = 0; i < V; i++) {
 		soma2 += b[W + i] * A[Gamma + i];
